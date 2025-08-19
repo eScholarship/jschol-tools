@@ -217,9 +217,12 @@ def splashInstrucs(itemID, item, attrs)
   elsif (ext = attrs["ext_journal"]) && ext["name"]
     # External journals
     journalText = ext["name"]
-    if ext["volume"]
+    if ext["volume"] && ext["issue"]
+      journalText << ", #{ext["volume"]}(#{ext["issue"]})"
+    elsif ext["volume"]
       journalText << ", #{ext["volume"]}"
-      ext["issue"] and journalText << "(#{ext["issue"]})"
+    elsif ext["issue"]
+      journalText << ", issue #{ext["issue"]}"
     end
     issn = ext["issn"]
   end

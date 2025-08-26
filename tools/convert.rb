@@ -1128,17 +1128,23 @@ def parseUCIngest(itemID, inMeta, fileType, isPending)
 
   # For eschol journals, populate the issue and section models.
   issue = section = nil
-  volNum = inMeta.text_at("./context/volume")
-  issueNum = inMeta.text_at("./context/issue")
-  if inMeta[:state] != "withdrawn" && issueNum && volNum
+  if inMeta[:state] != "withdrawn"
+
+    # Figure out if the pub is from an eschol journal
     issueUnit = inMeta.xpath("./context/entity[@id]").select {
                       |ent| $allUnits[ent[:id]] && $allUnits[ent[:id]].type == "journal" }[0]
     issueUnit and issueUnit = issueUnit[:id]
-    if issueUnit
-      # Data for eScholarship journals
-      if $allUnits.include?(issueUnit)
-        volNum.nil? and raise("missing volume number on eschol journal item")
 
+    if issueUnit
+      # eSchol journals require both these fields
+      volNum = inMeta.text_at("./context/volume")
+      issueNum = inMeta.text_at("./context/issue")
+
+      if !(issueNum && volNum)
+        "Warning: missing required volume and/or issue number for eSchol journal."
+      elsif !($allUnits.include?(issueUnit))
+        "Warning: issue associated with unknown unit #{issueUnit.inspect}"
+      else
         # Prefer eschol5 rights overrides to eschol4.
         rights = checkRightsOverride(issueUnit, volNum, issueNum, rights)
 
@@ -1173,8 +1179,6 @@ def parseUCIngest(itemID, inMeta, fileType, isPending)
         section[:name] = inMeta.text_at("./context/sectionHeader") || "Articles"
         ord = inMeta.text_at("./context/publicationOrder").to_i
         section[:ordering] = ord > 0 ? ord : nil
-      else
-        "Warning: issue associated with unknown unit #{issueUnit.inspect}"
       end
     else
       # Data for external journals

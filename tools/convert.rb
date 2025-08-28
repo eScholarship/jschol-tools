@@ -1001,6 +1001,7 @@ end
 
 ###################################################################################################
 def parseUCIngest(itemID, inMeta, fileType, isPending)
+  puts "IN Parse"
   attrs = {}
   attrs[:addl_info] = inMeta.html_at("./comments") and sanitizeHTML(inMeta.html_at("./comments"))
   attrs[:author_hide] = !!inMeta.at("./authors[@hideAuthor]")   # Only journal items can have this attribute
@@ -1023,7 +1024,8 @@ def parseUCIngest(itemID, inMeta, fileType, isPending)
   attrs[:pub_submit] = parseDate(inMeta.text_at("./context/dateSubmitted"))
   attrs[:pub_accept] = parseDate(inMeta.text_at("./context/dateAccepted"))
   attrs[:pub_publish] = parseDate(inMeta.text_at("./context/datePublished"))
-
+  attrs[:thesis_dept] = inMeta.text_at("./context/department")
+  puts "ATTRS THESIS Dept #{attrs[:thesis_dept]}"
   # Record submitter (especially useful for forensics)
   attrs[:submitter] = inMeta.xpath("./history/stateChange").map { |sc|
     sc[:state] =~ /^(new|uploaded|pending|published)/ && sc[:who] ? sc[:who] : nil
@@ -1461,6 +1463,7 @@ def indexItem(itemID, batch, nailgun)
       rights:        rightsURLToCode(dbItem[:rights]),
       sort_author:   (authors[0] || {name:""})[:name].gsub(/[^\w ]/, '')[0,1024].downcase,
       keywords:      attrs[:keywords] ? attrs[:keywords] : [""],
+      departments:    attrs[:thesis_dept] || "",
       is_info:       0
     }
   }

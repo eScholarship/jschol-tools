@@ -1261,7 +1261,7 @@ def parseUCIngest(itemID, inMeta, fileType, isPending)
                            dbItem[:content_type].nil? &&
                            attrs[:supp_files]) ? "multimedia" :
                           fileType == "ETD" ? "dissertation" :
-                          inMeta[:type] ? inMeta[:type].sub("paper", "article") :
+                          inMeta[:type] ? inMeta[:type].sub("paper", "article").sub("etd","dissertation"):
                           "article"
   dbItem[:submitted]    = submissionDate
   dbItem[:added]        = addDate

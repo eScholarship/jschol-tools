@@ -1463,7 +1463,7 @@ def indexItem(itemID, batch, nailgun)
       rights:        rightsURLToCode(dbItem[:rights]),
       sort_author:   (authors[0] || {name:""})[:name].gsub(/[^\w ]/, '')[0,1024].downcase,
       keywords:      attrs[:keywords] ? attrs[:keywords] : [""],
-      departments:    attrs[:thesis_dept] || "",
+      thesis_dept:    attrs[:thesis_dept] || "",
       is_info:       0
     }
   }

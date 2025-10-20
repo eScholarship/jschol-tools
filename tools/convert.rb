@@ -967,12 +967,18 @@ def checkRightsOverride(unitID, volNum, issNum, oldRights)
     iss = Issue.where(unit_id: unitID, volume: volNum, issue: issNum).first
     if iss
       issAttrs = (iss.attrs && JSON.parse(iss.attrs)) || {}
+      if issAttrs["use_item_rights"] == "true"
+        return oldRights
+      end
       rights = issAttrs["rights"]
     else
       # Failing that, check for a default set on the unit
       unit = $allUnits[unitID]
       unitAttrs = unit && unit.attrs && JSON.parse(unit.attrs) || {}
       if unitAttrs["default_issue"] && unitAttrs["default_issue"]["rights"]
+        if unitAttrs["default_issue"]["use_item_rights"] == "true"
+          return oldRights
+        end
         rights = unitAttrs["default_issue"]["rights"]
       else
         # Failing that, use values from the most-recent issue

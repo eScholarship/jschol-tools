@@ -35,6 +35,8 @@ require 'sanitize'
 require 'sequel'
 require 'time'
 require 'unindent'
+require 'csv'
+require 'cgi'
 require_relative '../util/nailgun.rb'
 require_relative '../util/normalize.rb'
 require_relative '../util/sanitize.rb'
@@ -111,6 +113,16 @@ $unitChildren = nil
 $issueCoverCache = {}
 $issueNumberingCache = {}
 
+# Initialize the nested map for thesis department
+$thesisdeptmap = Hash.new { |h, k| h[k] = {} }
+mappath = File.join(__dir__, '..', 'config', 'thesisdeptmap.csv')
+CSV.foreach(mappath, headers: true) do |row|
+  campus = row['campus_unitid'].strip
+  department = CGI.unescapeHTML(row['thesis_department']).strip
+  dept_unitid = row['dept_unitid'].strip
+  $thesisdeptmap[campus][department] = dept_unitid
+end
+#puts $thesisdeptmap
 # Make puts thread-safe, and prepend each line with the thread it's coming from. While we're at it,
 # let's auto-flush the output.
 $stdoutMutex = Mutex.new
@@ -1026,6 +1038,7 @@ def parseUCIngest(itemID, inMeta, fileType, isPending)
   attrs[:pub_publish] = parseDate(inMeta.text_at("./context/datePublished"))
   attrs[:thesis_dept] = inMeta.text_at("./context/department")
   puts "ATTRS THESIS Dept #{attrs[:thesis_dept]}"
+  #
   # Record submitter (especially useful for forensics)
   attrs[:submitter] = inMeta.xpath("./history/stateChange").map { |sc|
     sc[:state] =~ /^(new|uploaded|pending|published)/ && sc[:who] ? sc[:who] : nil
@@ -1444,6 +1457,18 @@ def indexItem(itemID, batch, nailgun)
       parseUCIngest(itemID, rawMeta, "UCIngest", isPending)
   end
 
+  # Add department unit id if possible
+  if attrs[:thesis_dept]
+    puts "found thesis dept"
+    etd_units = units.select { |unit| unit.include?('_etd') }
+    etd_units.each do |campus|
+       dept_unitid = $thesisdeptmap.dig(campus, attrs[:thesis_dept])
+       puts dept_unitid
+       units << dept_unitid  unless dept_unitid.nil?
+       end
+    puts "All units"
+    puts units
+    end
   text = $noCloudSearchMode ? "" : grabText(itemID, dbItem.content_type)
   
   # Create JSON for the full text index
@@ -1463,7 +1488,6 @@ def indexItem(itemID, batch, nailgun)
       rights:        rightsURLToCode(dbItem[:rights]),
       sort_author:   (authors[0] || {name:""})[:name].gsub(/[^\w ]/, '')[0,1024].downcase,
       keywords:      attrs[:keywords] ? attrs[:keywords] : [""],
-      thesis_dept:    attrs[:thesis_dept] || "",
       is_info:       0
     }
   }

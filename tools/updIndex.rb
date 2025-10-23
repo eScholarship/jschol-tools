@@ -100,6 +100,11 @@ fields = [
                                                               search_enabled:    true,
                                                               facet_enabled:     true,
                                                               sort_enabled:      false } },
+  { index_field_name: "thesis_dept", index_field_type:      "literal",
+                                     literal_options:         { facet_enabled:    true,
+                                                              search_enabled: true,
+                                                              return_enabled: true,
+                                                              sort_enabled:      true } },
 ]
 
 ###################################################################################################

@@ -1,0 +1,80 @@
+campus_unitid,dept_unitid,thesis_department
+ucsc_etd,ucsc_anthro_etd,Anthropology
+ucsc_etd,ucsc_anthro_etd,Anthropology (Feminist Studies)
+ucsc_etd,ucsc_anthro_etd,Anthropology (Latin American and Latino Studies)
+ucsc_etd,ucsc_appms_etd,Applied Mathematics and Statistics
+ucsc_etd,ucsc_appms_etd,Applied Mathematics and Statistics (Robotics and Control)
+ucsc_etd,ucsc_astro_etd ,Astronomy &amp; Astrophysics
+ucsc_etd,ucsc_astro_etd ,Astronomy and Astrophysics (Statistics)
+ucsc_etd,ucsc_chem_etd ,Biochemistry
+ucsc_etd,ucsc_chem_etd ,Bioinformatics
+ucsc_etd,ucsc_biomeng_etd,Biomolecular Engineering and Bioinformatics
+ucsc_etd,ucsc_chem_etd ,Chemistry
+ucsc_etd,ucsc_compmed_etd,Computational Media
+ucsc_etd,ucsc_cseng_etd,Computer Engineering
+ucsc_etd,ucsc_cseng_etd,Computer Engineering (Robotics and Control)
+ucsc_etd,ucsc_cseng_etd,Computer Science
+ucsc_etd,ucsc_digartmedia_etd,Digital Arts and New Media
+ucsc_etd,ucsc_earth_etd,Earth Science
+ucsc_etd,ucsc_eeb_etd,Ecology and Evolutionary Biology
+ucsc_etd,ucsc_eeb_etd,Ecology and Evolutionary Biology (Coastal Science and Policy)
+ucsc_etd,ucsc_eeb_etd,Ecology and Evolutionary Biology (Education)
+ucsc_etd,ucsc_eeb_etd,Ecology and Evolutionary Biology (Environmental Studies)
+ucsc_etd,ucscecon_etd,Economics
+ucsc_etd,ucsced_etd,Education
+ucsc_etd,ucsced_etd,Education (Sociology)
+ucsc_etd,ucsc_eceng_etd,Electrical Engineering
+ucsc_etd,ucsc_eceng_etd,Electrical Engineering (Robotics and Control)
+ucsc_etd,ucsc_env_etd,Environmental Studies
+ucsc_etd,ucsc_env_etd,Environmental Studies (Ecology &amp; Evolutionary Biology)
+ucsc_etd,ucsc_env_etd,Environmental Studies (Sociology)
+ucsc_etd,ucsc_env_etd,Environmental Toxicology
+ucsc_etd,ucscfeministstudies_etd,Feminist Studies
+ucsc_etd,ucsc_film_etd,Film &amp; Digital Media (Visual Studies)
+ucsc_etd,ucsc_film_etd,Film and Digital Media
+ucsc_etd,ucsc_hist_etd,History
+ucsc_etd,ucsc_hist_etd,History (Feminist Studies)
+ucsc_etd,ucsc_histcons_etd,History of Consciousness
+ucsc_etd,ucsc_histcons_etd,History of Consciousness (American Studies)
+ucsc_etd,ucsc_histcons_etd,History of Consciousness (Anthropology)
+ucsc_etd,ucsc_histcons_etd,History of Consciousness (Feminist Studies)
+ucsc_etd,ucsc_histcons_etd,History of Consciousness (Literature)
+ucsc_etd,ucsc_histcons_etd,History of Consciousness (Philosophy)
+ucsc_etd,ucsc_histcons_etd,History of Consciousness (Visual Studies)
+ucsc_etd,ucscecon_etd,International Economics
+ucsc_etd,ucsc_latin_etd,Latin American Latino Studies
+ucsc_etd,ucsc_ling_etd,Linguistics
+ucsc_etd,ucsc_lit_etd,Literature
+ucsc_etd,ucsc_lit_etd,Literature (American Studies)
+ucsc_etd,ucsc_lit_etd,Literature (Feminist Studies)
+ucsc_etd,ucscmath_etd,Mathematics
+ucsc_etd,metx_etd,Microbiology and Environmental Toxicology
+ucsc_etd,ucsc_cellbio_etd,Molecular Cell and Developmental Biology
+ucsc_etd,ucsc_music_etd ,Music
+ucsc_etd,ucsc_music_etd ,Music Composition
+ucsc_etd,ucsc_ocean_etd,Ocean Sciences
+ucsc_etd,ucsc_philo_etd,Philosophy
+ucsc_etd,ucsc_phys_etd,Physics
+ucsc_etd,ucsc_pol_etd,Politics
+ucsc_etd,ucsc_pol_etd,Politics (American Studies)
+ucsc_etd,ucsc_pol_etd,Politics (Environmental Studies)
+ucsc_etd,ucsc_pol_etd,Politics (Feminist Studies and Latin American &amp; Latino Studies)
+ucsc_etd,ucsc_pol_etd,Politics (Feminist Studies)
+ucsc_etd,ucsc_pol_etd,Politics (History of Consciousness and Latin American &amp; Latino Studies)
+ucsc_etd,ucsc_pol_etd,Politics (History of Consciousness)
+ucsc_etd,ucsc_pol_etd,Politics (Latin American and Latino Studies)
+ucsc_etd,ucsc_psych_etd,Psychology
+ucsc_etd,ucsc_psych_etd,Psychology (Feminist Studies)
+ucsc_etd,ucsc_psych_etd,Psychology (Latin American and Latino Studies)
+ucsc_etd,ucsc_cseng_etd,Scientific Computing and Applied Mathematics
+ucsc_etd,ucsc_socio_etd,Sociology
+ucsc_etd,ucsc_socio_etd,Sociology (Anthropology)
+ucsc_etd,ucsc_socio_etd,Sociology (Feminist Studies and Latin American &amp; Latino Studies)
+ucsc_etd,ucsc_socio_etd,Sociology (Feminist Studies)
+ucsc_etd,ucsc_socio_etd,Sociology (Latin American and Latino Studies)
+ucsc_etd,ucsc_socio_etd,Sociology (Philosophy)
+ucsc_etd,ucsc_stats_etd,Statistical Science
+ucsc_etd,ucsc_stats_etd,Statistics and Applied Mathematics
+ucsc_etd,ucsc_cseng_etd,Technology and Information Management
+ucsc_etd,ucsc_ppd_etd,Theater Arts
+ucsc_etd,ucsc_arthist_etd ,Visual Studies

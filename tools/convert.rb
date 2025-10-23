@@ -793,19 +793,23 @@ def addShowPubDatesAttrs(issueUnit, volNum, issueNum, issueAttrs)
   if iss
     issAttrs = (iss.attrs && JSON.parse(iss.attrs)) || {}
     show_pub_dates = issAttrs["show_pub_dates"]
+    use_item_rights = issAttrs["use_item_rights"]
   else
     unit = $allUnits[issueUnit]
     unitAttrs = unit && unit.attrs && JSON.parse(unit.attrs) || {}
     if unitAttrs["default_issue"] && unitAttrs["default_issue"]["show_pub_dates"]
         show_pub_dates = unitAttrs["default_issue"]["show_pub_dates"]
+        use_item_rights = unitAttrs["default_issue"]["use_item_rights"]
     else
       iss = Issue.where(unit_id: issueUnit).order(Sequel.desc(:published)).order_append(Sequel.desc(:issue)).first
       if iss
         issAttrs = (iss.attrs && JSON.parse(iss.attrs)) || {}
         show_pub_dates = issAttrs["show_pub_dates"]
+        use_item_rights = issAttrs["use_item_rights"]
       end
     end
     issueAttrs[:show_pub_dates] = show_pub_dates
+    issueAttrs[:use_item_rights] = use_item_rights
   end
 end
 
@@ -968,7 +972,7 @@ def checkRightsOverride(unitID, volNum, issNum, oldRights)
     if iss
       issAttrs = (iss.attrs && JSON.parse(iss.attrs)) || {}
       if issAttrs["use_item_rights"] == "true"
-        return oldRights
+        return oldRights, issAttrs["rights"]
       end
       rights = issAttrs["rights"]
     else
@@ -977,7 +981,7 @@ def checkRightsOverride(unitID, volNum, issNum, oldRights)
       unitAttrs = unit && unit.attrs && JSON.parse(unit.attrs) || {}
       if unitAttrs["default_issue"] && unitAttrs["default_issue"]["rights"]
         if unitAttrs["default_issue"]["use_item_rights"] == "true"
-          return oldRights
+          return oldRights, unitAttrs["default_issue"]["rights"]
         end
         rights = unitAttrs["default_issue"]["rights"]
       else
@@ -994,7 +998,7 @@ def checkRightsOverride(unitID, volNum, issNum, oldRights)
     end
     $issueRightsCache[key] = rights
   end
-  return $issueRightsCache[key]
+  return $issueRightsCache[key], $issueRightsCache[key]
 end
 
 ###################################################################################################
@@ -1151,8 +1155,8 @@ def parseUCIngest(itemID, inMeta, fileType, isPending)
       elsif !($allUnits.include?(issueUnit))
         "Warning: issue associated with unknown unit #{issueUnit.inspect}"
       else
-        # Prefer eschol5 rights overrides to eschol4.
-        rights = checkRightsOverride(issueUnit, volNum, issueNum, rights)
+
+        rights, issueRights = checkRightsOverride(issueUnit, volNum, issueNum, rights)
 
         issue = Issue.new
         issue[:unit_id]  = issueUnit
@@ -1178,7 +1182,8 @@ def parseUCIngest(itemID, inMeta, fileType, isPending)
         addIssueBuyLink(issueUnit, volNum, issueNum, issueAttrs)
         addIssueNumberingAttrs(issueUnit, volNum, issueNum, issueAttrs)
         addShowPubDatesAttrs(issueUnit, volNum, issueNum, issueAttrs)
-        rights and issueAttrs[:rights] = rights
+        issueAttrs[:rights] = issueRights
+        issueAttrs[:use_item_rights] = use_item_rights
         !issueAttrs.empty? and issue[:attrs] = issueAttrs.to_json
 
         section = Section.new

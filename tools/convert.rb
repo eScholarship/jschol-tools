@@ -967,12 +967,18 @@ def checkRightsOverride(unitID, volNum, issNum, oldRights)
     iss = Issue.where(unit_id: unitID, volume: volNum, issue: issNum).first
     if iss
       issAttrs = (iss.attrs && JSON.parse(iss.attrs)) || {}
+      if issAttrs["use_item_rights"] == "true"
+        return oldRights, issAttrs["rights"], issAttrs["use_item_rights"]
+      end
       rights = issAttrs["rights"]
     else
       # Failing that, check for a default set on the unit
       unit = $allUnits[unitID]
       unitAttrs = unit && unit.attrs && JSON.parse(unit.attrs) || {}
       if unitAttrs["default_issue"] && unitAttrs["default_issue"]["rights"]
+        if unitAttrs["default_issue"]["use_item_rights"] == "true"
+          return oldRights, unitAttrs["default_issue"]["rights"], "true"
+        end
         rights = unitAttrs["default_issue"]["rights"]
       else
         # Failing that, use values from the most-recent issue
@@ -988,7 +994,7 @@ def checkRightsOverride(unitID, volNum, issNum, oldRights)
     end
     $issueRightsCache[key] = rights
   end
-  return $issueRightsCache[key]
+  return $issueRightsCache[key], $issueRightsCache[key], "false"
 end
 
 ###################################################################################################
@@ -1145,8 +1151,8 @@ def parseUCIngest(itemID, inMeta, fileType, isPending)
       elsif !($allUnits.include?(issueUnit))
         "Warning: issue associated with unknown unit #{issueUnit.inspect}"
       else
-        # Prefer eschol5 rights overrides to eschol4.
-        rights = checkRightsOverride(issueUnit, volNum, issueNum, rights)
+
+        rights, issueRights, use_item_rights = checkRightsOverride(issueUnit, volNum, issueNum, rights)
 
         issue = Issue.new
         issue[:unit_id]  = issueUnit
@@ -1172,7 +1178,8 @@ def parseUCIngest(itemID, inMeta, fileType, isPending)
         addIssueBuyLink(issueUnit, volNum, issueNum, issueAttrs)
         addIssueNumberingAttrs(issueUnit, volNum, issueNum, issueAttrs)
         addShowPubDatesAttrs(issueUnit, volNum, issueNum, issueAttrs)
-        rights and issueAttrs[:rights] = rights
+        issueAttrs[:rights] = issueRights
+        issueAttrs[:use_item_rights] = use_item_rights
         !issueAttrs.empty? and issue[:attrs] = issueAttrs.to_json
 
         section = Section.new

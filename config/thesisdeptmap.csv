@@ -10,7 +10,7 @@ ucsc_etd,ucsc_chem_etd ,Biochemistry
 ucsc_etd,ucsc_chem_etd ,Bioinformatics
 ucsc_etd,ucsc_biomeng_etd,Biomolecular Engineering and Bioinformatics
 ucsc_etd,ucsc_chem_etd ,Chemistry
-ucsc_etd,ucsc_compmed_etd,Computational Media
+ucsc_etd,ucsc_gpm_etd,Computational Media
 ucsc_etd,ucsc_cseng_etd,Computer Engineering
 ucsc_etd,ucsc_cseng_etd,Computer Engineering (Robotics and Control)
 ucsc_etd,ucsc_cseng_etd,Computer Science
@@ -54,7 +54,7 @@ ucsc_etd,ucsc_music_etd ,Music
 ucsc_etd,ucsc_music_etd ,Music Composition
 ucsc_etd,ucsc_ocean_etd,Ocean Sciences
 ucsc_etd,ucsc_philo_etd,Philosophy
-ucsc_etd,ucsc_phys_etd,Physics
+ucsc_etd,ucsc_physics_etd,Physics
 ucsc_etd,ucsc_pol_etd,Politics
 ucsc_etd,ucsc_pol_etd,Politics (American Studies)
 ucsc_etd,ucsc_pol_etd,Politics (Environmental Studies)

@@ -331,7 +331,7 @@ def traceUnits(units)
         puts "Warning: skipping unknown unit #{unitID.inspect}"
         next
       end
-      if unit.type == "journal"
+      if unit.type == "journal" || unit.type == "conference_proceedings"
         journals << unitID
       elsif unit.type == "campus"
         firstCampus ||= unitID
@@ -1132,22 +1132,22 @@ def parseUCIngest(itemID, inMeta, fileType, isPending)
   # We'll need this in a couple places later on
   rights = translateRights(inMeta.text_at("./rights"))
 
-  # For eschol journals, populate the issue and section models.
+  # For eschol journals and conference proceedings, populate the issue and section models.
   issue = section = nil
   if inMeta[:state] != "withdrawn"
 
-    # Figure out if the pub is from an eschol journal
+    # Figure out if the pub is from an eschol journal or conference proceedings
     issueUnit = inMeta.xpath("./context/entity[@id]").select {
-                      |ent| $allUnits[ent[:id]] && $allUnits[ent[:id]].type == "journal" }[0]
+                      |ent| $allUnits[ent[:id]] && ($allUnits[ent[:id]].type == "journal" || $allUnits[ent[:id]].type == "conference_proceedings") }[0]
     issueUnit and issueUnit = issueUnit[:id]
 
     if issueUnit
-      # eSchol journals require both these fields
+      # eSchol journals and conference proceedings require both these fields
       volNum = inMeta.text_at("./context/volume")
       issueNum = inMeta.text_at("./context/issue")
 
       if !(issueNum && volNum)
-        "Warning: missing required volume and/or issue number for eSchol journal."
+        "Warning: missing required volume and/or issue number for eSchol journal/conference proceedings."
       elsif !($allUnits.include?(issueUnit))
         "Warning: issue associated with unknown unit #{issueUnit.inspect}"
       else

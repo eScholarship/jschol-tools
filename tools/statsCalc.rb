@@ -525,6 +525,7 @@ def gatherItemCategories
       when 'monograph_series'; "monographic series"
       when 'series';           "series"
       when 'seminar_series';   "seminar series"
+      when 'conference_proceedings';   "conference proceedings"
       else                     raise("unknown unit type mapping: #{type}")
     end
   }

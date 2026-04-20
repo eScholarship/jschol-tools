@@ -146,11 +146,11 @@ $discTbl = {"1540" => "Life Sciences",
 
 $issueRightsCache = {}
 
-$oaPolicyDate = { lbnl:    "2015-10-01",
-                  ucsf:    "2012-05-21",
-                  ucop:    nil,  # not included for now; maybe will be: 2015-10-23
-                  anrcs:   nil,  # not included for now
-                  default: "2013-07-24" }
+$oaPolicyDate = { lbnl:    "2015-10-01", # LBL Public Access Policy 
+                  ucsf:    "2012-05-21", # UCSF senate OA Policy
+                  ucop:    "2015-10-23", # UC Presidential OA Policy 
+                  anrcs:   "2015-10-23", # UC Presidential OA Policy 
+                  default: "2013-07-24" }  # Academic Senate OA Policy 
 
 ###################################################################################################
 # Configure EZID API for minting arks for people

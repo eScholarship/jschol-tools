@@ -17,4 +17,7 @@ if __name__ == "__main__":
         level, title, page = item
         # Output in mutools compatible format (mutools itself changed to anchors instead of page nums, arrgh)
         lvltabs = '\t' * level
-        print(f"{lvltabs}\"{title}\"\t#{page + 1}")  # Page numbers are 0-indexed in PyMuPDF
+        if page < 1:
+            print(f"{lvltabs}\"{title}\"\t(null)")
+        else:
+            print(f"{lvltabs}\"{title}\"\t#{page}")  # PyMuPDF get_toc() page numbers are 1-based

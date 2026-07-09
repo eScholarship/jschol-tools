@@ -15,8 +15,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 cd "$REPO_ROOT"
 
-IDS_FILE="${1:-sample_ids.txt}"
-OUT_DIR="toc_backfill_sample"
+IDS_FILE="${1:-tmp/sample_ids.txt}"
+OUT_DIR="tmp/toc_backfill_sample"
 
 RUBY="${RUBY:-ruby}"
 CONVERT=($RUBY tools/convert.rb)

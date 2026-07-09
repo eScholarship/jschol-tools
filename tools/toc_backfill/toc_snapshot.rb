@@ -2,6 +2,9 @@
 # Dumps a snapshot of items.attrs.toc for a list of item IDs
 # Usage: ruby toc_snapshot.rb <ids_file>
 
+require 'rubygems'
+require 'bundler/setup'
+
 require 'sequel'
 require 'json'
 

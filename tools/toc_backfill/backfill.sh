@@ -14,7 +14,8 @@ cd "$REPO_ROOT"
 
 IDS_FILE="${1:-tmp/backfill_ids.txt}"
 BATCH_SIZE="${2:-500}"
-WORK_DIR="tmp/toc_backfill_run"
+# Override WORK_DIR to isolate runs (e.g. a small scale test vs. the real backfill)
+WORK_DIR="${WORK_DIR:-tmp/toc_backfill_run}"
 CHUNK_DIR="$WORK_DIR/chunks"
 LOG_DIR="$WORK_DIR/logs"
 DONE_FILE="$WORK_DIR/completed_chunks.txt"

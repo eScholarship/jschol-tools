@@ -79,8 +79,8 @@ fi
 
 echo
 echo "  item-level tallies (scanned from logs):"
-echo "    changed:   $(grep -rhc 'Changed item' "$LOG_DIR" 2>/dev/null | paste -sd+ - | bc 2>/dev/null || echo '?')"
-echo "    unchanged: $(grep -rhc 'Unchanged item' "$LOG_DIR" 2>/dev/null | paste -sd+ - | bc 2>/dev/null || echo '?')"
+echo "    changed:    $(grep -rh 'Changed item' "$LOG_DIR" 2>/dev/null | wc -l | tr -d ' ')"
+echo "    unchanged:  $(grep -rh 'Unchanged item' "$LOG_DIR" 2>/dev/null | wc -l | tr -d ' ')"
 echo "    toc errors: $(grep -rh 'error generating toc' "$LOG_DIR" 2>/dev/null | wc -l | tr -d ' ')"
 echo
 echo "Artifacts under $WORK_DIR/ (chunks/, logs/, completed_chunks.txt, failed_chunks.txt)"

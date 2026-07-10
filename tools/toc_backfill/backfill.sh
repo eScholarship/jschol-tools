@@ -14,6 +14,7 @@ cd "$REPO_ROOT"
 
 IDS_FILE="${1:-tmp/backfill_ids.txt}"
 BATCH_SIZE="${2:-500}"
+CHUNK_TIMEOUT="${CHUNK_TIMEOUT:-30m}"
 # Override WORK_DIR to isolate runs (e.g. a small scale test vs. the real backfill)
 WORK_DIR="${WORK_DIR:-tmp/toc_backfill_run}"
 CHUNK_DIR="$WORK_DIR/chunks"
@@ -56,13 +57,21 @@ for chunk in "$CHUNK_DIR"/chunk_*; do
 
   n=$(grep -c . "$chunk")
   echo "[$idx/$total_chunks] run  $name ($n items) -> $LOG_DIR/$name.log"
-  if "${CONVERT[@]}" --items --noCloudSearch $(cat "$chunk") > "$LOG_DIR/$name.log" 2>&1; then
+  # -k 30s: if convert.rb ignores the initial TERM (e.g. a wedged Nailgun child),
+  # follow up with SIGKILL 30s later so we never leave a zombie chunk running.
+  if timeout -k 30s "$CHUNK_TIMEOUT" "${CONVERT[@]}" --items --noCloudSearch $(cat "$chunk") > "$LOG_DIR/$name.log" 2>&1; then
     echo "$name" >> "$DONE_FILE"
     echo "[$idx/$total_chunks] ok   $name"
   else
     status=$?
-    echo "$name (exit $status)" >> "$FAIL_FILE"
-    echo "[$idx/$total_chunks] FAIL $name (exit $status) -- see $LOG_DIR/$name.log" >&2
+    # `timeout` exits 124 (TERM) or 137 (KILL) when it fires -- flag those as stalls.
+    if [[ $status -eq 124 || $status -eq 137 ]]; then
+      reason="TIMED OUT after $CHUNK_TIMEOUT"
+    else
+      reason="exit $status"
+    fi
+    echo "$name ($reason)" >> "$FAIL_FILE"
+    echo "[$idx/$total_chunks] FAIL $name ($reason) -- see $LOG_DIR/$name.log" >&2
     # Not marked done: a re-run will retry it
   fi
 done

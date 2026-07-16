@@ -15,6 +15,11 @@ if __name__ == "__main__":
 
     for item in toc:
         level, title, page = item
+        # The output format below is tab-delimited, so a tab inside the title would
+        # break the downstream parser in convert.rb (generatePdfTOC)
+        # skip these entries rather than emitting an unparseable line
+        if "\t" in title:
+            continue
         # Output in mutools compatible format (mutools itself changed to anchors instead of page nums, arrgh)
         lvltabs = '\t' * level
         if page < 1:

@@ -788,7 +788,7 @@ end
 # setup up show_pub_dates attr in issue attrs
 # if the issue exists, use the existing attrs
 # else use default_issue else use most recent issue
-def addShowPubDatesAttrs(issueUnit, volNum, issueNum, issueAttrs)
+def getShowPubDatesAttrs(issueUnit, volNum, issueNum)
   iss = Issue.where(unit_id: issueUnit, volume: volNum, issue: issueNum).first
   if iss
     issAttrs = (iss.attrs && JSON.parse(iss.attrs)) || {}
@@ -805,8 +805,8 @@ def addShowPubDatesAttrs(issueUnit, volNum, issueNum, issueAttrs)
         show_pub_dates = issAttrs["show_pub_dates"]
       end
     end
-    issueAttrs[:show_pub_dates] = show_pub_dates
   end
+  return show_pub_dates
 end
 
 ###################################################################################################
@@ -1152,7 +1152,10 @@ def parseUCIngest(itemID, inMeta, fileType, isPending)
         "Warning: issue associated with unknown unit #{issueUnit.inspect}"
       else
 
+        # grab this values before we create the new issue otherwise it will interfere
+        # with using the defaults when appropriate
         rights, issueRights, use_item_rights = checkRightsOverride(issueUnit, volNum, issueNum, rights)
+        show_pub_dates = getShowPubDatesAttrs(issueUnit, volNum, issueNum)
 
         issue = Issue.new
         issue[:unit_id]  = issueUnit
@@ -1177,7 +1180,7 @@ def parseUCIngest(itemID, inMeta, fileType, isPending)
         findIssueCover(issueUnit, volNum, issueNum, tmp, issueAttrs)
         addIssueBuyLink(issueUnit, volNum, issueNum, issueAttrs)
         addIssueNumberingAttrs(issueUnit, volNum, issueNum, issueAttrs)
-        addShowPubDatesAttrs(issueUnit, volNum, issueNum, issueAttrs)
+        issueAttrs[:show_pub_dates] = show_pub_dates
         issueAttrs[:rights] = issueRights
         issueAttrs[:use_item_rights] = use_item_rights
         !issueAttrs.empty? and issue[:attrs] = issueAttrs.to_json

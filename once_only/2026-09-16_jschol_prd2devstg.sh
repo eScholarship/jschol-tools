@@ -33,17 +33,14 @@ if [[ " $MACHINES " =~ " $THIS_MACHINE " ]]; then
     sleep 5
 
     # Synchronize lots of miscellaneous directories
-    for dir in allStructReport \
-               linkBack \
+    for dir in linkBack \
                repec \
                erep/statistics \
-               erep/xtf/bpRedirect \
-               erep/xtf/dojRedirect \
                erep/xtf/ripCache \
                erep/xtf/stats; \
     do
       echo "Syncing $dir from prod."
-      rsync -a --delete eschol@submit.escholarship.org:/apps/eschol/$dir/ /apps/eschol/$dir/
+      rsync -a --delete eschol@pub-submit3-prd.escholarship.org:/apps/eschol/$dir/ /apps/eschol/$dir/
     done
 
     ############ JSCHOL ###########
@@ -51,11 +48,11 @@ if [[ " $MACHINES " =~ " $THIS_MACHINE " ]]; then
     ~/bin/backupJscholDb.sh
 
     # Dump the prod jschol database to a file.
-    ssh eschol@submit.escholarship.org /bin/bash /apps/eschol/bin/backupJscholDb.sh --raw
+    ssh eschol@pub-submit3-prd.escholarship.org /bin/bash /apps/eschol/bin/backupJscholDb.sh --raw
 
     # Copy the db backup file from prod.
-    PROD_FILE=`ssh eschol@submit.escholarship.org ls -t '/apps/eschol/eschol5/jschol/db_backup/raw_dump*' | head -1`
-    scp eschol@submit.escholarship.org:$PROD_FILE /apps/eschol/tmp/jschol_db_fromprod.gz
+    PROD_FILE=`ssh eschol@pub-submit3-prd.escholarship.org ls -t '/apps/eschol/eschol5/jschol/db_backup/raw_dump*' | head -1`
+    scp eschol@pub-submit3-prd.escholarship.org:$PROD_FILE /apps/eschol/tmp/jschol_db_fromprod.gz
 
     # Rebuild the jschol database on this machine
     ~/bin/restoreJscholDb.sh /apps/eschol/tmp/jschol_db_fromprod.gz --raw
@@ -71,11 +68,11 @@ if [[ " $MACHINES " =~ " $THIS_MACHINE " ]]; then
     cd ~
 
     # Dump the prod OJS database to a file.
-    ssh eschol@submit.escholarship.org /bin/bash -c "source ~/.bashrc; cd ~/apache/htdocs/ojs/eschol/utilities; ./backup.sh"
+    ssh eschol@pub-submit3-prd.escholarship.org /bin/bash -c "source ~/.bashrc; cd ~/apache/htdocs/ojs/eschol/utilities; ./backup.sh"
 
     # Copy the OJS files and db backup from prod. But not the .hg dir, since it includes our local backups of the db.
     cd ~
-    #rsync -a --delete --exclude '.hg' eschol@submit.escholarship.org:ojs/ ojs/
+    #rsync -a --delete --exclude '.hg' eschol@pub-submit3-prd.escholarship.org:ojs/ ojs/
 
     # Clear the OJS cache
     #find ~/apache/htdocs/ojs/cache -name '*.php' | xargs rm -f
@@ -103,18 +100,18 @@ if [[ " $MACHINES " =~ " $THIS_MACHINE " ]]; then
     rm -rf indexes-from-prod
     mkdir -p indexes-from-prod/erep/clean-$TIMESTAMP/base
     # Have to do lazy separately, since it's through a sym link
-    until rsync -a --delete eschol@submit.escholarship.org:erep/xtf/index/lazy/ indexes-from-prod/erep/clean-$TIMESTAMP/base/lazy/
+    until rsync -a --delete eschol@pub-submit3-prd.escholarship.org:erep/xtf/index/lazy/ indexes-from-prod/erep/clean-$TIMESTAMP/base/lazy/
     do
       echo "Retrying rsync"
       sleep 5
     done
-    until rsync -a --delete --filter="- lazy" eschol@submit.escholarship.org:erep/xtf/index/ indexes-from-prod/erep/clean-$TIMESTAMP/base/
+    until rsync -a --delete --filter="- lazy" eschol@pub-submit3-prd.escholarship.org:erep/xtf/index/ indexes-from-prod/erep/clean-$TIMESTAMP/base/
     do
       echo "Retrying rsync"
       sleep 5
     done
     mkdir -p indexes-from-prod/preview/clean-$TIMESTAMP/base
-    until rsync -a --delete eschol@submit.escholarship.org:erep/xtf/preview-index/ indexes-from-prod/preview/clean-$TIMESTAMP/base/
+    until rsync -a --delete eschol@pub-submit3-prd.escholarship.org:erep/xtf/preview-index/ indexes-from-prod/preview/clean-$TIMESTAMP/base/
     do
       echo "Retrying rsync"
       sleep 5
@@ -129,7 +126,7 @@ if [[ " $MACHINES " =~ " $THIS_MACHINE " ]]; then
     # Copy the data from prod, over our current data dir. Delete anything
     # extraneous on this end.
     echo "Rsyncing data from prod, log at /apps/eschol/tmp/data_rsync.log."
-    until rsync -av --delete eschol@submit.escholarship.org:erep/data/ /apps/eschol/erep/data/ > /apps/eschol/tmp/data_rsync.log
+    until rsync -av --delete eschol@pub-submit3-prd.escholarship.org:erep/data/ /apps/eschol/erep/data/ > /apps/eschol/tmp/data_rsync.log
     do
       echo "Retrying rsync"
       sleep 5

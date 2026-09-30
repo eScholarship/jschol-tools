@@ -1267,11 +1267,11 @@ def parseUCIngest(itemID, inMeta, fileType, isPending)
                           inMeta[:type] == "non-textual" ? nil :
                           contentType && contentType.strip.length > 0 ? contentType :
                           nil
-  dbItem[:genre]        = (!attrs[:suppress_content] &&
+  dbItem[:genre]        = fileType == "ETD" ? "dissertation" :
+                          inMeta[:type] ? inMeta[:type].sub("paper", "article").sub("etd","dissertation"):
+                           (!attrs[:suppress_content] &&
                            dbItem[:content_type].nil? &&
                            attrs[:supp_files]) ? "multimedia" :
-                          fileType == "ETD" ? "dissertation" :
-                          inMeta[:type] ? inMeta[:type].sub("paper", "article").sub("etd","dissertation"):
                           "article"
   dbItem[:submitted]    = submissionDate
   dbItem[:added]        = addDate

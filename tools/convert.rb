@@ -1267,6 +1267,7 @@ def parseUCIngest(itemID, inMeta, fileType, isPending)
                           inMeta[:type] == "non-textual" ? nil :
                           contentType && contentType.strip.length > 0 ? contentType :
                           nil
+  # consider ETD type and known item type to determine genre before running multimedia logic
   dbItem[:genre]        = fileType == "ETD" ? "dissertation" :
                           inMeta[:type] ? inMeta[:type].sub("paper", "article").sub("etd","dissertation"):
                            (!attrs[:suppress_content] &&
